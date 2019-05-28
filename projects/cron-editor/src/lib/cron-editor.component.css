@@ -11,3 +11,7 @@
   position: relative;
   top: 1px;
 }
+
+.nav-tabs li a {	
+  cursor: pointer;	
+}
