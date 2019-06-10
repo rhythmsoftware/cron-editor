@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CronOptions } from 'projects/cron-editor/src/lib/CronOptions';
-//Uncomment below line to import localizations
-import { Localizations } from 'projects/cron-editor/src/lib/Localizations';
+// Uncomment below line to import localizations
+// import { Localizations } from 'projects/cron-editor/src/lib/Localizations';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +19,7 @@ export class AppComponent {
     hideSeconds: true,
     removeSeconds: true,
     removeYears: true,
-    //Uncomment below line to set swedish localization
-    localizations: Localizations.Swedish
+    // Uncomment below line to set swedish localization
+    // localizations: Localizations.Swedish
   };
 }
