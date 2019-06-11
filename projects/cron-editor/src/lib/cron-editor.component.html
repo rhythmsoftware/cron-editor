@@ -1,5 +1,5 @@
 <!-- Tabs -->
-<ul class="nav nav-tabs tab-nav" role="tablist">
+<ul class="nav nav-tabs" role="tablist">
     <li role="presentation" *ngIf="!options.hideMinutesTab" [ngClass]="{'active': activeTab === 'minutes'}">
         <a aria-controls="minutes" role="tab" data-toggle="tab" (click)="setActiveTab('minutes')">
           {{l('minutely')}}
