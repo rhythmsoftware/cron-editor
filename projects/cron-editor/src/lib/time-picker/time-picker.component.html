@@ -8,7 +8,7 @@
   <option *ngFor="let minute of minutes" [ngValue]="minute">{{minute | number: '2.'}}</option>
 </select>
 <span *ngIf="!hideSeconds">
-  :
+:
 </span>
 <!-- second -->
 <select class="timeFormControl form-control-sm form-control input-sm" (change)="change.emit()" [(ngModel)]="time.seconds" [disabled]="disabled" *ngIf="!hideSeconds"
@@ -19,5 +19,5 @@
 <!-- am/pm -->
 <select class="timeFormControl form-control-sm form-control input-sm" (change)="change.emit()" [(ngModel)]="time.hourTypes" [disabled]="disabled" *ngIf="!use24HourTime"
   [ngClass]="selectClass">
-  <option *ngFor="let hourType of hourTypes" [ngValue]="hourType">{{hourType | number: '2.'}}</option>
+  <option *ngFor="let hourType of hourTypes" [ngValue]="hourType">{{hourType}}</option>
 </select>
