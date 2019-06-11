@@ -1,3 +1,4 @@
+tab-pane .well, 
 .tab-pane .card {
   margin-top: 10px;
 }
@@ -12,6 +13,11 @@
   top: 1px;
 }
 
-.nav-tabs li a {	
-  cursor: pointer;	
+.nav-tabs li a {
+  cursor: pointer;
+}
+
+.tab-pane label {
+  display: inline;
+  font-weight: inherit;
 }
