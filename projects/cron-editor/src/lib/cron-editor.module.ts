@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { CronEditorComponent } from './cron-editor.component';
+import { CronEditorTabsComponent } from './cron-editor-tabs/cron-editor-tabs.component';
 import { TimePickerComponent } from './time-picker/time-picker.component';
 
 @NgModule({
-  declarations: [CronEditorComponent, TimePickerComponent],
+  declarations: [CronEditorTabsComponent, TimePickerComponent],
   imports: [CommonModule, FormsModule],
-  exports: [CronEditorComponent]
+  exports: [CronEditorTabsComponent]
 })
 export class CronEditorModule { }

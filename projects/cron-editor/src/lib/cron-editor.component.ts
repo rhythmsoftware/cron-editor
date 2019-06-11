@@ -1,16 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { CronOptions } from './CronOptions';
 import { Localizations } from './Localizations';
 
 import { Days, MonthWeeks, Months } from './enums';
 import Utils from './Utils';
 
-@Component({
-  selector: 'cron-editor',
-  templateUrl: './cron-editor.component.html',
-  styleUrls: ['./cron-editor.component.css']
-})
-export class CronEditorComponent implements OnInit, OnChanges {
+export abstract class CronEditorComponent implements OnInit, OnChanges {
   @Input() public disabled: boolean;
 
   @Input() get cron(): string { return this.localCron; }
