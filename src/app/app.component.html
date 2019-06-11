@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-3">
+  <div class="col-3 col-md-3">
     <h4>Options</h4>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="use24HourTime" [(ngModel)]="cronOptions.use24HourTime">
@@ -46,12 +46,12 @@
       <label class="form-check-label" for="removeYears">removeYears: {{cronOptions.removeYears}}</label>
     </div>
   </div>
-  <div class="col-9">
-      <cron-editor [(cron)]="cronExpression" [disabled]="isCronDisabled" [(options)]="cronOptions"></cron-editor>
-      <hr />
-      <p>The resulting Cron expression: </p>
-      <div class="form-group mx-sm-3 mb-2">
-        <input type="text" class="form-control" [(ngModel)]="cronExpression">
-      </div>
+  <div class="col-9 col-md-9">
+    <cron-editor [(cron)]="cronExpression" [disabled]="isCronDisabled" [(options)]="cronOptions"></cron-editor>
+    <hr />
+    <p>The resulting Cron expression: </p>
+    <div class="form-group mx-sm-3 mb-2">
+      <input type="text" class="form-control" [(ngModel)]="cronExpression">
+    </div>
   </div>
 </div>
