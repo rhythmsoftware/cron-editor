@@ -1,23 +1,23 @@
-.tab-pane .well, 
+.tab-pane .well,
 .tab-pane .card {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .form-inline .form-group {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
-.form-inline .form-group input[type=checkbox],
-.form-inline .form-group input[type=radio] {
-  position: relative;
-  top: 1px;
-}
+    .form-inline .form-group input[type=checkbox],
+    .form-inline .form-group input[type=radio] {
+        position: relative;
+        top: 1px;
+    }
 
 .nav-tabs li a {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .tab-pane label {
-  display: inline;
-  font-weight: inherit;
+    display: inline;
+    font-weight: inherit;
 }

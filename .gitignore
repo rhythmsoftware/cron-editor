@@ -28,6 +28,7 @@
 bin/
 obj/
 *.DotSettings.user
+*.DotSettings
 
 # misc
 /.sass-cache

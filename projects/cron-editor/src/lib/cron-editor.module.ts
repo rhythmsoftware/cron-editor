@@ -6,8 +6,8 @@ import { CronEditorComponent } from './cron-editor.component';
 import { TimePickerComponent } from './time-picker/time-picker.component';
 
 @NgModule({
-  declarations: [CronEditorComponent, TimePickerComponent],
-  imports: [CommonModule, FormsModule],
-  exports: [CronEditorComponent]
+    declarations: [CronEditorComponent, TimePickerComponent],
+    imports: [CommonModule, FormsModule],
+    exports: [CronEditorComponent]
 })
 export class CronEditorModule { }
