@@ -22,4 +22,5 @@ export class AppComponent {
     // Uncomment below line to set swedish localization
     // localizations: Localizations.Swedish
   };
+  public style = 'compact';
 }

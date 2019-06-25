@@ -47,7 +47,13 @@ export interface Localization {
 
   every?: string;
   minutes?: string;
+  hours?: string;
+  days?: string;
+  weeks?: string;
+  months?: string;
+  years?: string;
   onSecond?: string;
+  onMinute?: string;
   hoursOnMinute?: string;
   andSecond?: string;
   daysAt?: string;
@@ -88,6 +94,7 @@ export interface Localization {
 
   cronExpressionCannotBeNull?: string;
   invalidCronExpression?: string;
+  couldNotParseExpression?: string;
 
   ordinalSuffix?(value: string): string;
 }
