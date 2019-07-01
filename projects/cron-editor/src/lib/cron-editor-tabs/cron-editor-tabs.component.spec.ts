@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TimePickerComponent } from '../time-picker/time-picker.component';
 
 import { CronEditorTabsComponent } from './cron-editor-tabs.component';
 
@@ -8,7 +10,13 @@ describe('CronEditorTabsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CronEditorTabsComponent ]
+      declarations: [
+        CronEditorTabsComponent,
+        TimePickerComponent
+      ],
+      imports: [
+        FormsModule
+      ]
     })
     .compileComponents();
   }));

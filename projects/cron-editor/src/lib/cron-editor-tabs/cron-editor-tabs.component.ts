@@ -22,9 +22,9 @@ export class CronEditorTabsComponent extends CronEditorComponent {
       this.state = this.getDefaultState();
     }
 
-    let cronSeven = cron;
+    let cronSeven = cron || '0 0/1 * ? * * *';
     if (this.options.removeSeconds) {
-      cronSeven = `0 ${cron}`;
+      cronSeven = `0 ${cronSeven}`;
     }
 
     if (this.options.removeYears) {
@@ -152,7 +152,7 @@ export class CronEditorTabsComponent extends CronEditorComponent {
   }
 
   private getDefaultState() {
-    const [defaultHours, defaultMinutes, defaultSeconds] = this.options.defaultTime.split(':').map(Number);
+    const [defaultHours, defaultMinutes, defaultSeconds] = (this.options && this.options.defaultTime || '00:00:00').split(':').map(Number);
 
     return {
       minutes: {

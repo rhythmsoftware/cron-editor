@@ -154,7 +154,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.time.hourTypes = this.getHourType(hoursNr);
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
-    } else if (normalizedCron.match(/\d+ \d+ \d+ \d+ (JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(,(JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC))* \? \d+\/\d+/)) {
+    } else if (normalizedCron.match(/\d+ \d+ \d+ (\d+|L|LW|1W) (JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(,(JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC))* \? \d+\/\d+/)) {
       this.repeatType = 'years';
 
       const yearsParts = years.split('/');
@@ -165,6 +165,8 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
           continue;
         this.onMonthsInYear[month] = months.indexOf(month) >= 0;
       }
+
+      this.onDayOfMonth = dayOfMonth;
 
       const hoursNr = Number(hours);
       this.time.hours = this.getAmPmHour(hoursNr);
@@ -195,6 +197,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     // Hours part
     parts.push('hours' === this.repeatType ?
       `0/${this.every}` :
+      'minutes' === this.repeatType ? '*' :
       this.getHourPart(this.time.hours, this.time.hourTypes));
 
     // Days part

@@ -11,6 +11,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   @Input() get cron(): string { return this.localCron; }
   set cron(value: string) {
     this.localCron = value;
+    this.handleModelChange(value);
     this.cronChange.emit(this.localCron);
   }
 
@@ -31,7 +32,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   public state: any;
 
   private localCron: string;
-  private localOptions: CronOptions;
+  private localOptions: CronOptions = {};
   protected isDirty: boolean;
 
   public ngOnInit() {
@@ -77,7 +78,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   }
 
   l(localizationKey: string): string {
-    return this.options.localizations[localizationKey] || localizationKey;
+    return this.options && this.options.localizations && this.options.localizations[localizationKey] || localizationKey;
   }
 
   private handleModelChange(cron: string) {
@@ -134,7 +135,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   }
 
   private getOrdinalSuffix(value: string) {
-    return this.localOptions.localizations.ordinalSuffix(value);
+    return this.localOptions && this.localOptions.localizations && this.localOptions.localizations.ordinalSuffix(value) || '';
   }
 
   private getSelectOptions() {
