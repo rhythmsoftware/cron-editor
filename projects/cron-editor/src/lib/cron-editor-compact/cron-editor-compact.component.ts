@@ -56,14 +56,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
   public types: string[];
 
   public ngOnInit() {
-    this.types = [
-      'minutes',
-      'hours',
-      'days',
-      'weeks',
-      'months',
-      'years'
-      ];
+    this.setTypes();
   }
 
   onEveryChange(): void {
@@ -100,7 +93,21 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     this.options.removeSeconds = true;
   }
 
+  setTypes(): void {
+    const types = ['minutes',
+      'hours',
+      'days',
+      'weeks',
+      'months'];
+
+    if (!this.options.removeYears) {
+      types.push('years');
+    }
+    this.types = types;
+  }
+
   setValues(cron: string) {
+    this.setTypes();
     let normalizedCron = cron;
     if (this.options.removeSeconds) {
       normalizedCron = `0 ${normalizedCron}`;
