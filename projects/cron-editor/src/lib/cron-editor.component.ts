@@ -1,5 +1,5 @@
 import { OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { CronOptions } from './CronOptions';
+import { CronOptions, CronFormat } from './CronOptions';
 import { Localizations } from './Localizations';
 
 import { Days, MonthWeeks, Months } from './enums';
@@ -18,6 +18,11 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   @Input() public get options(): CronOptions { return this.localOptions; }
   public set options(value: CronOptions) {
     this.localOptions = Object.assign(this.defaultOptions, value);
+    if (this.localOptions.format === CronFormat.Quartz) {
+      this.localOptions.removeSeconds = false;
+    } else {
+      this.localOptions.removeSeconds = true;
+    }
   }
 
   // the name is an Angular convention, @Input variable name + "Change" suffix
@@ -36,8 +41,8 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   protected isDirty: boolean;
 
   public ngOnInit() {
-    if (this.options.removeSeconds) {
-      this.options.hideSeconds = true;
+    if (this.localOptions.removeSeconds) {
+      this.localOptions.hideSeconds = true;
     }
 
     this.validation.isValid = true;
@@ -78,7 +83,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   }
 
   l(localizationKey: string): string {
-    return this.options && this.options.localizations && this.options.localizations[localizationKey] || localizationKey;
+    return this.localOptions && this.localOptions.localizations && this.localOptions.localizations[localizationKey] || localizationKey;
   }
 
   private handleModelChange(cron: string) {
@@ -107,11 +112,11 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
 
     let expected = 5;
 
-    if (!this.options.removeSeconds) {
+    if (!this.localOptions.removeSeconds) {
       expected++;
     }
 
-    if (!this.options.removeYears) {
+    if (!this.localOptions.removeYears) {
       expected++;
     }
 
@@ -127,11 +132,11 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   protected abstract setValues(cron: string);
   
   protected getHourType(hour: number) {
-    return this.options.use24HourTime ? undefined : (hour >= 12 ? 'PM' : 'AM');
+    return this.localOptions.use24HourTime ? undefined : (hour >= 12 ? 'PM' : 'AM');
   }
 
   protected getAmPmHour(hour: number) {
-    return this.options.use24HourTime ? hour : (hour + 11) % 12 + 1;
+    return this.localOptions.use24HourTime ? hour : (hour + 11) % 12 + 1;
   }
 
   private getOrdinalSuffix(value: string) {
@@ -139,6 +144,14 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
   }
 
   private getSelectOptions() {
+    let monthDays: string[];
+
+    if (!this.options || this.options.format === CronFormat.Quartz) {
+      monthDays = ['1W', ...Utils.getRange(1, 31).map(String), 'LW', 'L'];
+    } else {
+      monthDays = [...Utils.getRange(1, 31).map(String)];
+    }
+
     return {
       months: Utils.getRange(1, 12),
       monthWeeks: ['#1', '#2', '#3', '#4', '#5', 'L'],
@@ -148,7 +161,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
       seconds: Utils.getRange(0, 59),
       hours: Utils.getRange(1, 23),
       monthDays: Utils.getRange(1, 31),
-      monthDaysWithLasts: ['1W', ...Utils.getRange(1, 31).map(String), 'LW', 'L'],
+      monthDaysWithLasts: monthDays,
       hourTypes: ['AM', 'PM']
     };
   }
@@ -170,6 +183,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
     hideSeconds: true,
     removeSeconds: true,
     removeYears: true,
-    localizations: Localizations.English
+    localizations: Localizations.English,
+    format: CronFormat.Quartz
   };
 }

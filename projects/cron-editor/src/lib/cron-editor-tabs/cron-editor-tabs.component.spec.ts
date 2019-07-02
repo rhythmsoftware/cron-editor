@@ -24,6 +24,7 @@ describe('CronEditorTabsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CronEditorTabsComponent);
     component = fixture.componentInstance;
+    component.options = {};
     fixture.detectChanges();
   });
 

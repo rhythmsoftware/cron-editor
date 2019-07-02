@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CronEditorComponent } from '../cron-editor.component';
+import { CronFormat } from '../CronOptions';
 
 @Component({
   selector: 'cron-editor-compact',
@@ -89,6 +90,16 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     this.updateCron();
   }
 
+  setQuartz(): void {
+    this.options.format = CronFormat.Quartz;
+    this.options.removeSeconds = false;
+  }
+
+  setNCronTab(): void {
+    this.options.format = CronFormat.NCronTab;
+    this.options.removeSeconds = true;
+  }
+
   setValues(cron: string) {
     let normalizedCron = cron;
     if (this.options.removeSeconds) {
@@ -102,13 +113,21 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     const [seconds, minutes, hours, dayOfMonth, months, dayOfWeek, years] = normalizedCron.split(' ');
 
     if (normalizedCron.match(/\d+ \d+\/\d+ \* 1\/1 \* \? \*/)) {
+      this.setQuartz();
       this.repeatType = 'minutes';
 
       const minParts = minutes.split('/');
       this.every = Number(minParts[1]);
 
       this.time.seconds = Number(seconds);
-    } else if (normalizedCron.match(/\d+ \d+ \d+\/\d+ 1\/1 \* \? \*/)) {
+    } else if (normalizedCron.match(/\d+ \*\/\d+ \* \* \* \* \*/)) {
+      this.setNCronTab();
+      this.repeatType = 'minutes';
+
+      const minParts = minutes.split('/');
+      this.every = Number(minParts[1]);    }
+    else if (normalizedCron.match(/\d+ \d+ \d+\/\d+ 1\/1 \* \? \*/)) {
+      this.setQuartz();
       this.repeatType = 'hours';
 
       const hoursParts = hours.split('/');
@@ -116,7 +135,16 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
 
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
+    } else if (normalizedCron.match(/\d+ \d+ \*\/\d+ \* \* \* \*/)) {
+      this.setNCronTab();
+      this.repeatType = 'hours';
+
+      const hoursParts = hours.split('/');
+      this.every = Number(hoursParts[1]);
+
+      this.time.minutes = Number(minutes);
     } else if (normalizedCron.match(/\d+ \d+ \d+ \d+\/\d+ \* \? \*/)) {
+      this.setQuartz();
       this.repeatType = 'days';
 
       const daysParts = dayOfMonth.split('/');
@@ -127,7 +155,19 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.time.hourTypes = this.getHourType(hoursNr);
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
+    } else if (normalizedCron.match(/\d+ \d+ \d+ \*\/\d+ \* \* \*/)) {
+      this.setNCronTab();
+      this.repeatType = 'days';
+
+      const daysParts = dayOfMonth.split('/');
+      this.every = Number(daysParts[1]);
+
+      const hoursNr = Number(hours);
+      this.time.hours = this.getAmPmHour(hoursNr);
+      this.time.hourTypes = this.getHourType(hoursNr);
+      this.time.minutes = Number(minutes);
     } else if (normalizedCron.match(/\d+ \d+ \d+ \? \* (MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))* \*/)) {
+      this.setQuartz();
       this.repeatType = 'weeks';
 
       for (let day in this.onDaysOfWeek) {
@@ -141,7 +181,22 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.time.hourTypes = this.getHourType(hoursNr);
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
+    } else if (normalizedCron.match(/\d+ \d+ \d+ \* \* (MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))* \*/)) {
+      this.setNCronTab();
+      this.repeatType = 'weeks';
+
+      for (let day in this.onDaysOfWeek) {
+        if (!this.onDaysOfWeek.hasOwnProperty(day))
+          continue;
+        this.onDaysOfWeek[day] = dayOfWeek.indexOf(day) >= 0;
+      }
+
+      const hoursNr = Number(hours);
+      this.time.hours = this.getAmPmHour(hoursNr);
+      this.time.hourTypes = this.getHourType(hoursNr);
+      this.time.minutes = Number(minutes);
     } else if (normalizedCron.match(/\d+ \d+ \d+ (\d+|L|LW|1W) \d+\/\d+ \? \*/)) {
+      this.setQuartz();
       this.repeatType = 'months';
 
       const monthParts = months.split('/');
@@ -154,7 +209,21 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.time.hourTypes = this.getHourType(hoursNr);
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
+    } else if (normalizedCron.match(/\d+ \d+ \d+ \d+ \*\/\d+ \* \*/)) {
+      this.setNCronTab();
+      this.repeatType = 'months';
+
+      const monthParts = months.split('/');
+      this.every = Number(monthParts[1]);
+
+      this.onDayOfMonth = dayOfMonth;
+
+      const hoursNr = Number(hours);
+      this.time.hours = this.getAmPmHour(hoursNr);
+      this.time.hourTypes = this.getHourType(hoursNr);
+      this.time.minutes = Number(minutes);
     } else if (normalizedCron.match(/\d+ \d+ \d+ (\d+|L|LW|1W) (JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(,(JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC))* \? \d+\/\d+/)) {
+      this.setQuartz();
       this.repeatType = 'years';
 
       const yearsParts = years.split('/');
@@ -173,8 +242,27 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.time.hourTypes = this.getHourType(hoursNr);
       this.time.minutes = Number(minutes);
       this.time.seconds = Number(seconds);
+    } else if (normalizedCron.match(/\d+ \d+ \d+ \d+ (JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(,(JAN|FEB|MAR|APR|JUN|JUL|AUG|SEP|OCT|NOV|DEC))* \* \*\/\d+/)) {
+      this.setNCronTab();
+      this.repeatType = 'years';
+
+      const yearsParts = years.split('/');
+      this.every = Number(yearsParts[1]);
+
+      for (let month in this.onMonthsInYear) {
+        if (!this.onMonthsInYear.hasOwnProperty(month))
+          continue;
+        this.onMonthsInYear[month] = months.indexOf(month) >= 0;
+      }
+
+      this.onDayOfMonth = dayOfMonth;
+
+      const hoursNr = Number(hours);
+      this.time.hours = this.getAmPmHour(hoursNr);
+      this.time.hourTypes = this.getHourType(hoursNr);
+      this.time.minutes = Number(minutes);
     } else {
-      this.validation.isValid = true;
+      this.validation.isValid = false;
       this.validation.errorMessage = this.l('couldNotParseExpression');
     }
   }
@@ -183,41 +271,106 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     this.isDirty = true;
 
     const parts = [];
-
+    
     // Seconds part
-    if (!this.options.hideSeconds) {
+    if (!this.options.removeSeconds) {
       parts.push(this.time.seconds);
     }
 
     // Minutes part
-    parts.push('minutes' === this.repeatType ?
-      `0/${this.every}` :
-      this.time.minutes);
+    parts.push(this.getMinutePart());
 
     // Hours part
-    parts.push('hours' === this.repeatType ?
-      `0/${this.every}` :
-      'minutes' === this.repeatType ? '*' :
-      this.getHourPart(this.time.hours, this.time.hourTypes));
+    parts.push(this.getHourPart());
 
     // Days part
-    if ('days' === this.repeatType) {
-      parts.push(`1/${this.every}`);
-    } else if ('weeks' === this.repeatType) {
-      parts.push('?');
-    } else if ('months' === this.repeatType || 'years' === this.repeatType) {
-      if ('weekday' === this.monthType) {
-        parts.push('?');
-      } else {
-        parts.push(this.onDayOfMonth);
-      }
-    } else {
-      parts.push('1/1');
-    }
+    parts.push(this.getDaysPart());
 
     // Months part
+    parts.push(this.getMonthsPart());
+
+    // Weekdays part
+    parts.push(this.getWeekdaysPart());
+
+    // Years part
+    if (!this.options.removeYears) {
+      parts.push(this.getYearsPart());
+    }
+
+    this.cron = parts.join(' ');
+  }
+
+  getMinutePart(): string {
+    if ('minutes' === this.repeatType) {
+      if (this.options.format === CronFormat.Quartz) {
+        return `0/${this.every}`;
+      } else {
+        return `*/${this.every}`;
+      }
+    }
+
+    return `${this.time.minutes}`;
+  }
+
+  getHourPart(): string {
+    if ('minutes' === this.repeatType) {
+      return '*';
+    }
+
+    if ('hours' !== this.repeatType) {
+      if (this.options.use24HourTime) {
+        return `${this.time.hours}`;
+      } else {
+        return this.time.hourTypes === 'AM' ? (this.time.hours === 12 ? '0' : `${this.time.hours}`) : (this.time.hours === 12 ? '12' : `${this.time.hours + 12}`);
+      }
+    }
+
+    if (this.options.format === CronFormat.Quartz) {
+      return `0/${this.every}`;
+    } else {
+      return `*/${this.every}`;
+    }
+  }
+
+  getDaysPart(): string {
+    if ('days' === this.repeatType) {
+      if (this.options.format === CronFormat.Quartz) {
+        return `1/${this.every}`;
+      } else {
+        return `*/${this.every}`;
+      }
+    } else if ('weeks' === this.repeatType) {
+      if (this.options.format === CronFormat.Quartz) {
+        return '?';
+      } else {
+        return '*';
+      }
+    } else if ('months' === this.repeatType || 'years' === this.repeatType) {
+      if ('weekday' === this.monthType) {
+        if (this.options.format === CronFormat.Quartz) {
+          return '?';
+        } else {
+          return '*';
+        }
+      } else {
+        return `${this.onDayOfMonth}`;
+      }
+    } else {
+      if (this.options.format === CronFormat.Quartz) {
+        return '1/1';
+      } else {
+        return '*';
+      }
+    }
+  }
+
+  getMonthsPart(): string {
     if ('months' === this.repeatType) {
-      parts.push(`1/${this.every}`);
+      if (this.options.format === CronFormat.Quartz) {
+        return `1/${this.every}`;
+      } else {
+        return `*/${this.every}`;
+      }
     } else if ('years' === this.repeatType) {
       const months = [];
       for (let month in this.onMonthsInYear) {
@@ -229,12 +382,13 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
         this.onMonthsInYear.JAN = true;
         months.push('JAN');
       }
-      parts.push(months.join(','));
+      return months.join(',');
     } else {
-      parts.push('*');
+      return '*';
     }
+  }
 
-    // Weekdays part
+  getWeekdaysPart(): string {
     if ('weeks' === this.repeatType) {
       const days = [];
       for (let day in this.onDaysOfWeek) {
@@ -242,31 +396,28 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
           continue;
         days.push(day);
       }
-      parts.push(days.join(','));
+      return days.join(',');
     } else if (('months' === this.repeatType && 'weekday' === this.monthType) || 
       ('years' === this.repeatType && 'weekday' === this.yearType)) {
-      parts.push(`${this.onDayOfWeek}#${this.onDayOfWeekNum}`);
+      return `${this.onDayOfWeek}#${this.onDayOfWeekNum}`;
     } else {
-      parts.push('?');
-    }
-
-    // Years part
-    if (!this.options.hideYearlyTab) {
-      if ('years' === this.repeatType) {
-        parts.push(`1/${this.every}`);
+      if (this.options.format === CronFormat.Quartz) {
+        return '?';
       } else {
-        parts.push('*');
+        return '*';
       }
     }
-
-    this.cron = parts.join(' ');
   }
 
-  getHourPart(hour: number, hourType: string) {
-    if (this.options.use24HourTime) {
-      return hour;
+  getYearsPart(): string {
+    if ('years' === this.repeatType) {
+      if (this.options.format === CronFormat.Quartz) {
+        return `1/${this.every}`;
+      } else {
+        return `*/${this.every}`;
+      }
     } else {
-      return hourType === 'AM' ? (hour === 12 ? 0 : hour) : (hour === 12 ? 12 : hour + 12);
+      return '*';
     }
   }
 }

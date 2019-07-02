@@ -14,6 +14,7 @@ export interface CronOptions {
     hideMonthlyTab?: boolean;
     hideYearlyTab?: boolean;
     hideAdvancedTab?: boolean;
+    format?: CronFormat;
 
     /** hides the Seconds UI form element */
     hideSeconds?: boolean;
@@ -26,6 +27,11 @@ export interface CronOptions {
 
     /** Set values to change localizations **/
     localizations?: Localization;
+}
+
+export enum CronFormat {
+  Quartz,
+  NCronTab
 }
 
 export interface Localization {
