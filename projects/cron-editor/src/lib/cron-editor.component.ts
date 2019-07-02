@@ -23,6 +23,7 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
     } else {
       this.localOptions.removeSeconds = true;
     }
+    this.handleModelChange(this.cron);
   }
 
   // the name is an Angular convention, @Input variable name + "Change" suffix
