@@ -17,7 +17,8 @@ export abstract class CronEditorComponent implements OnInit, OnChanges {
 
   @Input() public get options(): CronOptions { return this.localOptions; }
   public set options(value: CronOptions) {
-    this.localOptions = Object.assign(this.defaultOptions, value);
+    Object.assign(this.defaultOptions, value);
+    this.localOptions = value;
     if (this.localOptions.format === CronFormat.Quartz) {
       this.localOptions.removeSeconds = false;
     } else {

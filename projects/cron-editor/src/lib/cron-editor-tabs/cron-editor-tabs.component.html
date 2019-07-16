@@ -5,7 +5,7 @@
       {{l('minutely')}}
     </a>
   </li>
-  
+
   <li class="nav-item" role="presentation" *ngIf="!options.hideHourlyTab" [ngClass]="{'active': activeTab === 'hourly'}">
     <a aria-controls="hourly" role="tab" data-toggle="tab" (click)="setActiveTab('hourly')" [ngClass]="{'active': activeTab === 'hourly'}">
       {{l('hourly')}}
@@ -42,7 +42,6 @@
     </a>
   </li>
 </ul>
-
 <!-- Tab content -->
 <div class="tab-content">
   <!-- Minutes-->

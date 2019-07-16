@@ -12,7 +12,7 @@
   <div class="form-group">
     <select class="form-control-sm form-control input-sm"
             [(ngModel)]="repeatType"
-            (change)="onTypeChange($event)">
+            (ngModelChange)="onTypeChange($event)">
       <option *ngFor="let type of types" [ngValue]="type">
         {{l(type)}}
       </option>
