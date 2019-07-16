@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CronEditorComponent } from '../cron-editor.component';
 import { CronFormat } from '../CronOptions';
+import Utils from '../Utils';
 
 @Component({
   selector: 'cron-editor-compact',
@@ -10,14 +11,15 @@ import { CronFormat } from '../CronOptions';
 })
 export class CronEditorCompactComponent extends CronEditorComponent implements OnInit {
   public every = 1;
-
+  public everySelectOptions = this.getEverySelectOptions();
+  public currentOptions = this.everySelectOptions.minutes;
   public time = {
     hours: 0,
     minutes: 0,
     seconds: 0,
     hourTypes: 'AM'
   };
-  
+
   public onDayOfMonth = '1';
   public onDaysOfWeek = {
     MON: true,
@@ -34,7 +36,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
 
   public onMonth = 0;
   public monthType = 'sequence'; // [sequence, weekday]
-  
+
   public yearType = 'sequence'; // [sequence, weekday]
 
   public onMonthsInYear = {
@@ -52,7 +54,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     DEC: false
   };
 
-  public repeatType = 'days';
+  public repeatType = 'minutes';
   public types: string[];
 
   public ngOnInit() {
@@ -63,8 +65,11 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     this.updateCron();
   }
 
-  onTypeChange(): void {
+  onTypeChange(typeValue: string): void {
     this.updateCron();
+    if (typeValue === 'weeks' || typeValue === 'years')
+      return;
+    this.updateSelectEveryValues(typeValue);
   }
 
   onTimeChange(): void {
@@ -132,7 +137,8 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
       this.repeatType = 'minutes';
 
       const minParts = minutes.split('/');
-      this.every = Number(minParts[1]);    }
+      this.every = Number(minParts[1]);
+    }
     else if (normalizedCron.match(/\d+ \d+ \d+\/\d+ 1\/1 \* \? \*/)) {
       this.setQuartz();
       this.repeatType = 'hours';
@@ -274,11 +280,21 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     }
   }
 
+  updateSelectEveryValues(typeValue: string) {
+    var neweverySelectOptions = this.everySelectOptions[typeValue];
+    var maxNewValue = neweverySelectOptions[neweverySelectOptions.length - 1];
+    var curValue = this.every;
+    this.currentOptions = this.everySelectOptions[typeValue];
+    if (maxNewValue < curValue) {
+      this.every = 1;
+    }
+  }
+
   updateCron(): void {
     this.isDirty = true;
 
     const parts = [];
-    
+
     // Seconds part
     if (!this.options.removeSeconds) {
       parts.push(this.time.seconds);
@@ -404,7 +420,7 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
         days.push(day);
       }
       return days.join(',');
-    } else if (('months' === this.repeatType && 'weekday' === this.monthType) || 
+    } else if (('months' === this.repeatType && 'weekday' === this.monthType) ||
       ('years' === this.repeatType && 'weekday' === this.yearType)) {
       return `${this.onDayOfWeek}#${this.onDayOfWeekNum}`;
     } else {
@@ -426,5 +442,15 @@ export class CronEditorCompactComponent extends CronEditorComponent implements O
     } else {
       return '*';
     }
+  }
+
+  private getEverySelectOptions() {
+    return {
+      minutes: Utils.getRange(0, 59),
+      hours: Utils.getRange(1, 23),
+      days: Utils.getRange(1, 31),
+      months: Utils.getRange(1, 12),
+      weeks: Utils.getRange(1, 23)
+    };
   }
 }
