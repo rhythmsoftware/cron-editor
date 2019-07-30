@@ -1,5 +1,5 @@
 {
-  "name": "cron-editor",
+  "name": "@rhythmsoftware/cron-editor",
   "description": "A cron expression generator to be used in Angular applications",
   "author": {
     "name": "Claudiu Constantin",
