@@ -23,4 +23,11 @@ export interface CronOptions {
 
     /** removes Years from the Cron expression */
     removeYears: boolean;
+
+    /**
+     * hides the "during the nearest weekday" checkbox on the Monthly and Yearly tabs.
+     * It produces day-of-month values such as "15W", which cron-parser (used by the
+     * Rhythm backends to validate and schedule) cannot parse.
+     */
+    hideNearestWeekday?: boolean;
 }

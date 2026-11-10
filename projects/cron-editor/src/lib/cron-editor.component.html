@@ -234,7 +234,7 @@
                                       [hideSeconds]="options.hideSeconds">
                     </cron-time-picker>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="!options.hideNearestWeekday">
                     <div class="form-check">
                         <input class="form-check-input" [(ngModel)]="state.monthly.runOnWeekday"
                                [ngClass]="options.formCheckboxClass"
@@ -351,7 +351,7 @@
                     </cron-time-picker>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" *ngIf="!options.hideNearestWeekday">
                     <div class="form-check">
                         <input class="form-check-input" [(ngModel)]="state.yearly.runOnWeekday"
                                [disabled]="disabled || activeTab !== 'yearly' || state.yearly.subTab !== 'specificMonthDay'"
